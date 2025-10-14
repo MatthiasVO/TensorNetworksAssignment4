@@ -1,4 +1,4 @@
-function Xopt = alg2(omega,M,delta,tol,tau,l,k_max)
+function Xopt = alg2(omega,PM,delta,tol,tau,l,k_max)
 
 k0 = ceil(tau/delta/norm(M,'fro'));
 r0 = 0;

@@ -14,44 +14,56 @@ Sb = svd(double(B));
 semilogy([Sr Sg Sb])
 
 
-
-omega_l = 512*512;
+n = size(R,1);
+omega_l = n*n;
 subset_percentage = 0.85;
 
 omega = zeros(omega_l,1);
-subset = round(omega_l*subset_percentage);
+m = round(omega_l*subset_percentage);
 
-omega(1:subset) = 1;
+omega(1:m) = 1;
 omega = omega(randperm(omega_l));
 omega = reshape(omega,size(R));
 
 imshow(omega)
-imshow(uint8(omega.*double(IMG)))
+PM = omega.*double(IMG);
+imshow(uint8(PM));
 
 
 
-tau = 2;
 
-k0 = ceil(tau/delta/norm(M,'fro'));
+delta = 1.2 * n^2/m;
+tol = 1e-4;
+tau = 5*n;
+l = 5;
+k_max = 150;
+
+%%%%%%%%%
+
+k0 = ceil(tau/delta/norm(PM,'fro'));
 r0 = 0;
-
 Y = k0*delta*M;
-
-
-
 r = zeros(k_max,1);
 s = zeros(k_max,1);
+
 for k =2:k_max
     s(k) = r(k-1) + 1;
     while  sigma(s(k)-l, k-1) <= tau
         [U,S,V] = svd(Y(:,:,k-1),"vector");
         U = U(:,1:s(k));
-        V = V(1:s(k),:);
+        V = V(:,1:s(k));
         S = S(1:s(k));
-
+        if S(s(k)) <= tau 
+            break 
+        end
         s(k) = s(k) + l;
     end
-    r_index = S >= tau;
+    
+    r_index = (S < tau);
+    r(k) = find(r_index,1)-1;
+
+    U * diag(S-tau)*V';
+
 end
 
 
