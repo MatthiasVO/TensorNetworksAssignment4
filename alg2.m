@@ -7,6 +7,7 @@ r = zeros(k_max,1);
 s = zeros(k_max,1);
 
 for k =2:k_max
+    disp(k)
     s(k) = r(k-1) + 1;
     while true
         [U,S,V] = svd(Y,"vector");
@@ -23,7 +24,9 @@ for k =2:k_max
 
     X = U * diag(S-tau)*V';
     if norm(omega.*(X-PM),'fro')/norm(PM,'fro') < tol
+        disp('yoniffo')
         break
+        
     end
     Y = omega.*(Y + delta*(PM-X) );
 end

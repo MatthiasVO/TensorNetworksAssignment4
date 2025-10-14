@@ -16,7 +16,7 @@ semilogy([Sr Sg Sb])
 
 n = size(R,1);
 omega_l = n*n;
-subset_percentage = 0.50;
+subset_percentage = 0.80;
 
 omega = zeros(omega_l,1);
 m = round(omega_l*subset_percentage);
@@ -32,11 +32,48 @@ imshow(uint8(PM));
 
 
 
-delta = 1.2 * n^2/m;
-tol = 1e-4;
-tau = 5*n;
-l = 5;
-k_max = 150;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+delta =  1* n^2/m;
+tol = 1e-9;
+tau = 20*n;
+l = 15;
+k_max = 400;
 
 %%%%%%%%%
 
