@@ -13,7 +13,7 @@ function M = D(X,Y,tau,n,alp,bet)
 
     M = reshape(Mi,[J dim_X]);
 
-    
+     
     a1 = 2:n;
     a2 = n+1:length(size(M));
     permute_indices = [a1 1 a2];
