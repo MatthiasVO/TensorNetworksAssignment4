@@ -16,7 +16,7 @@ semilogy([Sr Sg Sb])
 
 n = size(R,1);
 omega_l = n*n;
-subset_percentage = 0.80;
+subset_percentage = 0.50;
 
 omega = zeros(omega_l,1);
 m = round(omega_l*subset_percentage);
@@ -25,24 +25,41 @@ omega(1:m) = 1;
 omega = omega(randperm(omega_l));
 omega = reshape(omega,size(R));
 
-imshow(omega)
+%imshow(omega)
 PM = omega.*double(R);
-imshow(uint8(PM));
+%imshow(uint8(PM));
 
 
 %% alg 4
 clc
+tic
 OMEGA = zeros(size(IMG));
 OMEGA(:,:,1) = omega;
 OMEGA(:,:,2) = omega;
 OMEGA(:,:,3) = omega;
 
-alp = [1,1,1];
-bet = [1,1,1]*10;
-gam = [1 1 1]*0.1;
+alp = [1,1,1]*0.1;
+bet = [1,1,1];
+gam = [1 1 1]*500;
 tol = 10e-10;
-alg4(double(IMG),OMEGA,alp,bet,gam,tol);
+[Xtensor,Ytensor,Mtensor] = alg4(double(IMG),OMEGA,alp,bet,gam,tol);
+toc
 
+
+figure(1);
+tiledlayout(2,2, 'Padding', 'none', 'TileSpacing', 'none');
+
+nexttile;
+imshow(IMG);
+title('original');
+
+nexttile;
+imshow(uint8(omega) .* IMG);
+title('Omega');
+
+nexttile;
+imshow(uint8(Xtensor));
+title('Tensor');
 
 
 %% alg 2
@@ -50,7 +67,7 @@ delta =  1* n^2/m;
 tol = 1e-9;
 tau = 20*n;
 l = 15;
-k_max = 400;
+k_max = 1000;
 
 
 %%%%%%%%%
@@ -67,7 +84,10 @@ X(:,:,1) = XR;
 X(:,:,2) = XG;
 X(:,:,3) = XB;
 
+nexttile;
 imshow(uint8(X));
+title('Matrix');
+
 
 
 
