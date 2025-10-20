@@ -11,7 +11,19 @@ Sg = svd(double(G));
 Sb = svd(double(B));
 
 %plot log scale 
-semilogy([Sr Sg Sb])
+tiledlayout(1,2);
+nexttile;
+imshow(IMG);
+title('original image');
+nexttile;
+plot(Sr,'r');
+hold on
+plot(Sg,'g');
+plot(Sb,'b');
+legend('red channel', 'green channel', 'blue channel');
+xlim([-1 100]);
+hold off
+title('Singular values of the RGB-channels');
 
 
 n = size(R,1);
