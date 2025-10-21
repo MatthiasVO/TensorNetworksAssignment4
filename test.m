@@ -11,19 +11,21 @@ Sg = svd(double(G));
 Sb = svd(double(B));
 
 %plot log scale 
-tiledlayout(1,2);
+figure(1);
 nexttile;
 imshow(IMG);
-title('original image');
-nexttile;
+saveas(gcf,'original.png')
+%title('original image');
+figure(2);
 plot(Sr,'r');
 hold on
 plot(Sg,'g');
 plot(Sb,'b');
-legend('red channel', 'green channel', 'blue channel');
+%legend('red channel', 'green channel', 'blue channel');
 xlim([-1 100]);
 hold off
-title('Singular values of the RGB-channels');
+saveas(gcf,'RGB_SVD.svg')
+%title('Singular values of the RGB-channels');
 
 
 n = size(R,1);
@@ -44,18 +46,26 @@ PM = omega.*double(R);
 
 %% alg 4
 clc
-tic
+
 OMEGA = zeros(size(IMG));
 OMEGA(:,:,1) = omega;
 OMEGA(:,:,2) = omega;
 OMEGA(:,:,3) = omega;
 
-alp = [1,1,1]*0.1;
-bet = [1,1,1];
-gam = [1 1 1]*500;
+a = 0.1;
+b = 1;
+g = 500;
+
+alp = [1,1,0.01]*a;
+bet = [1,1,0.01]*b;
+gam = [1 1 0.01]*g;
+
+alp2 = [1,1,1]*a;
+bet2 = [1,1,1]*b;
+gam2 = [1 1 1]*g;
 tol = 10e-10;
 [Xtensor,Ytensor,Mtensor] = alg4(double(IMG),OMEGA,alp,bet,gam,tol);
-toc
+[Xtensor2,Ytensor2,Mtensor2] = alg4(double(IMG),OMEGA,alp2,bet2,gam2,tol);
 
 
 figure(1);
@@ -71,6 +81,9 @@ title('Omega');
 
 nexttile;
 imshow(uint8(Xtensor));
+title('Tensor');
+nexttile;
+imshow(uint8(Xtensor2));
 title('Tensor');
 
 
