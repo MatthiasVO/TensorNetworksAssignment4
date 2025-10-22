@@ -2,7 +2,7 @@ function [X,Y,M] = alg4(T,omega,alp,bet,gam,tol,k_max,init_val)
     M = {[],[],[]};
     Y = omega .* T + (1-omega)*init_val;
     X = omega .* T;
-    Tnorm = norm(T,'fro');
+    Tnorm = norm(omega.*T,'fro');
     k = 0;
     while true
         for i = 1:3
