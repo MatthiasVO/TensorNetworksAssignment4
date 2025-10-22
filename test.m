@@ -56,28 +56,30 @@ a = 0.1;
 b = 1;
 g = 500;
 
-alp = [1,1,0.01]*a;
-bet = [1,1,0.01]*b;
-gam = [1 1 0.01]*g;
+alp = [1,1,1]*a;
+bet = [1,1,1]*b;
+gam = [1 1 1]*g;
 
 alp2 = [1,1,1]*a;
 bet2 = [1,1,1]*b;
 gam2 = [1 1 1]*g;
 tol = 10e-10;
-[Xtensor,Ytensor,Mtensor] = alg4(double(IMG),OMEGA,alp,bet,gam,tol);
-[Xtensor2,Ytensor2,Mtensor2] = alg4(double(IMG),OMEGA,alp2,bet2,gam2,tol);
+k_max = 60;
+k_max2 = 100;
+[Xtensor,Ytensor,Mtensor] = alg4(double(IMG),OMEGA,alp,bet,gam,tol,k_max);
+[Xtensor2,Ytensor2,Mtensor2] = alg4(double(IMG),OMEGA,alp2,bet2,gam2,tol,k_max2);
 
 
 figure(1);
-tiledlayout(2,2, 'Padding', 'none', 'TileSpacing', 'none');
+tiledlayout(1,3, 'Padding', 'none', 'TileSpacing', 'none');
 
 nexttile;
 imshow(IMG);
 title('original');
 
-nexttile;
-imshow(uint8(omega) .* IMG);
-title('Omega');
+%nexttile;
+%imshow(uint8(omega) .* IMG);
+%title('Omega');
 
 nexttile;
 imshow(uint8(Xtensor));

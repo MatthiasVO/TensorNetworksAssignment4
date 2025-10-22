@@ -1,6 +1,6 @@
-function [X,Y,M] = alg4(T,omega,alp,bet,gam,tol)
+function [X,Y,M] = alg4(T,omega,alp,bet,gam,tol,k_max,init_val)
     M = {[],[],[]};
-    Y = omega .* T;
+    Y = omega .* T + (1-omega)*init_val;
     X = omega .* T;
     Tnorm = norm(T,'fro');
     k = 0;
@@ -18,7 +18,7 @@ function [X,Y,M] = alg4(T,omega,alp,bet,gam,tol)
             break
         end
 
-        if k > 60
+        if k > k_max
             break
         end
         
