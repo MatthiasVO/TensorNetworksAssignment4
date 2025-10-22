@@ -1,165 +1,57 @@
 clear
 clc
 
+%% load image
 IMG = imread("4.2.07.tiff");
+
 R = IMG(:,:,1);
 G = IMG(:,:,2);
 B = IMG(:,:,3);
 
+%% plot RGB SVD
 Sr = svd(double(R));
 Sg = svd(double(G));
 Sb = svd(double(B));
 
-%plot log scale 
 figure(1);
 imshow(IMG);
-saveas(gcf,'figures/original.png')
-%title('original image');
+%saveas(gcf,'figures/original.png')
+
 figure(2);
 plot(Sr,'r');
 hold on
 plot(Sg,'g');
 plot(Sb,'b');
-%legend('red channel', 'green channel', 'blue channel');
 xlim([-1 100]);
 hold off
-saveas(gcf,'figures/RGB_SVD.svg')
-%title('Singular values of the RGB-channels');
+%saveas(gcf,'figures/RGB_SVD.svg')
 
+%% compute omega
+ss = [ .75, .85];
+k=3;
+for subset = ss
+    figure(k);
+    tiledlayout(2,2, 'Padding', 'none', 'TileSpacing', 'none');
+    
+    [omega,n_subset_pixels] = get_omega(IMG,subset);
+    [Xmat, relerrmat,psnrmat] = run_alg2(R,G,B,IMG,omega,n_subset_pixels);
+    [Xtensor, relerrtensor,psnrtensor]= run_alg4(IMG,omega);
 
+    nexttile;
+    imshow(IMG);
+    
+    nexttile;
+    imshow(uint8(omega) .* IMG);
+    
+    nexttile;
+    imshow(uint8(Xmat));
 
-
-
-n = size(R,1);
-omega_l = n*n;
-subset_percentage = 0.01;
-
-omega = zeros(omega_l,1);
-m = round(omega_l*subset_percentage);
-
-omega(1:m) = 1;
-omega = omega(randperm(omega_l));
-omega = reshape(omega,size(R));
-
-
-omega2 = conv2(omega,ones(1,1),'same');
-
-imshow(omega)
-figure;
-imshow(omega2)
-omega = 1-omega2;
-PM = omega.*double(IMG);
-%imshow(uint8(PM));
-
-
-%% alg 4
-clc
-
-OMEGA = zeros(size(IMG));
-OMEGA(:,:,1) = omega;
-OMEGA(:,:,2) = omega;
-OMEGA(:,:,3) = omega;
-
-a = .1;
-b = 1;
-g = 500;
-
-alp = [1,1,1]*a;
-bet = [1,1,1]*b;
-gam = [1 1 1]*g;
-
-alp2 = [1,1,1]*a;
-bet2 = [1,1,1]*b;
-gam2 = [1 1 1]*g;
-tol = 10e-10;
-k_max = 60;
-k_max2 = 100;
-
-
-
-figure(1);
-tiledlayout(1,3, 'Padding', 'none', 'TileSpacing', 'none');
-
-nexttile;
-imshow(IMG);
-title('original');
-
-nexttile;
-imshow(uint8(PM));
-title('old');
-
-[Xtensor,Ytensor,Mtensor] = alg4(double(IMG),OMEGA,alp,bet,gam,tol,k_max,0);
-%[Xtensor2,Ytensor2,Mtensor2] = alg4(double(IMG),OMEGA,alp2,bet2,gam2,tol,k_max2,0);
-
-nexttile;
-imshow(uint8(Xtensor));
-title('new');
-
-% figure(2);
-% tiledlayout(2,2, 'Padding', 'none', 'TileSpacing', 'none');
-% 
-% nexttile;
-% imshow(IMG);
-% title('original');
-% 
-% nexttile;
-% imshow(uint8(Mtensor{1}));
-% title('1');
-% 
-% nexttile;
-% imshow(uint8(Mtensor{2}));
-% title('2');
-% nexttile;
-% imshow(uint8(Mtensor{3}));
-% title('3');
-% 
-% 
-% figure(2);
-% tiledlayout(1,3, 'Padding', 'none', 'TileSpacing', 'none');
-% 
-% nexttile;
-% imshow(IMG);
-% title('original');
-% 
-% %nexttile;
-% %imshow(uint8(omega) .* IMG);
-% %title('Omega');
-% 
-% nexttile;
-% imshow(uint8(Xtensor));
-% title('Tensor');
-% nexttile;
-% imshow(uint8(Xtensor2));
-% title('Tensor');
-
-
-%% alg 2
-delta =  1* n^2/m;
-tol = 1e-9;
-tau = 20*n;
-l = 15;
-k_max = 1000;
-
-
-%%%%%%%%%
-
-PMR = omega.*double(R);
-PMG = omega.*double(G);
-PMB = omega.*double(B);
-XR = alg2(omega,PMR,delta,tol,tau,l,k_max);
-XG = alg2(omega,PMG,delta,tol,tau,l,k_max);
-XB = alg2(omega,PMB,delta,tol,tau,l,k_max);
-
-X = zeros([size(R),3]);
-X(:,:,1) = XR;
-X(:,:,2) = XG;
-X(:,:,3) = XB;
-
-nexttile;
-imshow(uint8(X));
-title('Matrix');
-
-
-
-
-
+    nexttile;
+    imshow(uint8(Xtensor));
+    
+    pathh = "figures/";
+    filename = "compare_MT_" + string(subset)+ ".svg";
+    saveas(gcf,pathh + filename)
+    k=k+1;
+end
+string(datetime)

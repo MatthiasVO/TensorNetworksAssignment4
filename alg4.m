@@ -1,4 +1,4 @@
-function [X,Y,M] = alg4(T,omega,alp,bet,gam,tol,k_max,init_val)
+function X = alg4(T,omega,alp,bet,gam,tol,k_max,init_val)
     M = {[],[],[]};
     Y = omega .* T + (1-omega)*init_val;
     X = omega .* T;
