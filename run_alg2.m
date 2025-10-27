@@ -1,18 +1,18 @@
-function [X,relerr,PSNR]= run_alg2(R,G,B,IMG,omega,n_ss_pixels)
+function [X,relerr,PSNR]= run_alg2(R,G,B,IMG,omegaR,omegaG,omegaB,n_ss_pixels)
 n = size(R,1);
-delta =  1* n^2/n_ss_pixels;
+delta =  n^2/n_ss_pixels;
 tol = 1e-9;
 tau = 20*n;
 l = 15;
-k_max = 50;
+k_max = 250;
 
-PMR = omega.*double(R);
-PMG = omega.*double(G);
-PMB = omega.*double(B);
+PMR = omegaR.*double(R);
+PMG = omegaG.*double(G);
+PMB = omegaB.*double(B);
 
-XR = alg2(omega,PMR,delta,tol,tau,l,k_max);
-XG = alg2(omega,PMG,delta,tol,tau,l,k_max);
-XB = alg2(omega,PMB,delta,tol,tau,l,k_max);
+XR = alg2(omegaR,PMR,delta,tol,tau,l,k_max);
+XG = alg2(omegaG,PMG,delta,tol,tau,l,k_max);
+XB = alg2(omegaB,PMB,delta,tol,tau,l,k_max);
 
 X = zeros([size(R),3]);
 X(:,:,1) = XR;

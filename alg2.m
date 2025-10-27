@@ -7,7 +7,7 @@ r = zeros(k_max,1);
 s = zeros(k_max,1);
 
 for k =2:k_max
-    disp(k)
+    
     s(k) = r(k-1) + 1;
     while true
         [U,S,V] = svd(Y,"vector");
@@ -23,10 +23,11 @@ for k =2:k_max
     r(k) = find(r_index,1)-1;
 
     X = U * diag(S-tau)*V';
-    if norm(omega.*(X-PM),'fro')/norm(PM,'fro') < tol
-        disp('yoniffo')
+    error = norm(omega.*(X-PM),'fro')/norm(PM,'fro');
+    if error < tol
         break
         
     end
+    fprintf("\talg2 timestep k: %d, e: %e\n",k,error);
     Y = omega.*(Y + delta*(PM-X) );
 end

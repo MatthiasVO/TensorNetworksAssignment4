@@ -1,10 +1,10 @@
-function [X, relerr,PSNR] = run_alg4(IMG,omega)
+function [X, relerr,PSNR] = run_alg4(IMG,omegaR,omegaG,omegaB)
 
 
 OMEGA = zeros(size(IMG));
-OMEGA(:,:,1) = omega;
-OMEGA(:,:,2) = omega;
-OMEGA(:,:,3) = omega;
+OMEGA(:,:,1) = omegaR;
+OMEGA(:,:,2) = omegaG;
+OMEGA(:,:,3) = omegaB;
 
 a = .1;
 b = 1;
@@ -14,10 +14,9 @@ alp = [1,1,1]*a;
 bet = [1,1,1]*b;
 gam = [1 1 1]*g;
 
-tol = 1e-3;
 k_max = 60;
 
-X = alg4(double(IMG),OMEGA,alp,bet,gam,tol,k_max,0);
+X = alg4(double(IMG),OMEGA,alp,bet,gam,k_max,0);
 
 relerr = norm(X-double(IMG),'fro')/norm(double(IMG),'fro');
 PSNR = psnr(uint8(X),IMG);
