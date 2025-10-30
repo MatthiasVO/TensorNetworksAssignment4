@@ -85,14 +85,14 @@ SS = [.75, .75, .75;
       .90 .25 .25];
 
 N = size(SS,1);
-relerrMATshuff = zeros(length(ss),N);
-relerrTENshuff = zeros(length(ss),N);
+relerrMATshuff = zeros(length(ss),1);
+relerrTENshuff = zeros(length(ss),1);
 
-psnrMATshuff = zeros(length(ss),N);
-psnrTENshuff = zeros(length(ss),N);
+psnrMATshuff = zeros(length(ss),1);
+psnrTENshuff = zeros(length(ss),1);
 
-comp_timeMATshuff = zeros(length(ss),N);
-comp_timeTENshuff = zeros(length(ss),N);
+comp_timeMATshuff = zeros(length(ss),1);
+comp_timeTENshuff = zeros(length(ss),1);
 
 
 k = 7;
@@ -110,7 +110,7 @@ for n = 1:N
     
     tic
     [Xtensor, relerrtensor,psnrtensor]= run_alg4(IMG,omegaR,omegaG,omegaB);
-    comp_timeTENshuff(K) = toc;
+    comp_timeTENshuff(n) = toc;
 
     relerrMATshuff(n) = relerrmat;
     relerrTENshuff(n) = relerrtensor;
